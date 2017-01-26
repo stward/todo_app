@@ -26,21 +26,122 @@ function changeText() {
 
 $('#greetingText').on('keyup', changeText);
 
-var todos = [
-  {id: Math.floor(Math.random() * 100), title: 'Title 1', date: '01.11.17'},
-  {id: Math.floor(Math.random() * 100), title: 'Title 2', date: '02.11.17'},
-  {id: Math.floor(Math.random() * 100), title: 'Title 3', date: '03.11.17'},
-  {id: Math.floor(Math.random() * 100), title: 'Title 4', date: '04.11.17'},
-  {id: Math.floor(Math.random() * 100), title: 'Title 5', date: '05.11.17'}
-];
-
-function renderToDosToPage(arr) {
-  for (var i = 0; i < arr.length; i++) {
-    $('#todo-list').append('<tr><td>' + arr[i].title + '</td><td>' + arr[i].date + '</td><td><button id="' + arr[i].id + '" class="btn btn-custom completeToDoBtn">Complete</button></td></tr>')
+function setupStorage() {
+  if (!localStorage.toDos) {
+    localStorage.toDos = JSON.stringify([])
+  }
+  if (!localStorage.completeToDos) {
+    localStorage.completeToDos = JSON.stringify([])
   }
 }
 
-renderToDosToPage(todos)
+setupStorage();
+
+function addToDoToStorage(todo) {
+  var data = JSON.parse(localStorage.toDos);
+  data.push(todo);
+  localStorage.toDos = JSON.stringify(data);
+}
+
+function removeToDoFromStorage(todo) {
+  var data = JSON.parse(localStorage.toDos);
+  var new_data = data.filter(function (item) {
+    return item.id != todo.id
+  });
+  localStorage.toDos = JSON.stringify(new_data);
+}
+
+function clearStorage() {
+  localStorage.toDos = JSON.stringify([]);
+  localStorage.completeToDos = JSON.stringify([]);
+}
+
+function buildToDoHtml(item, buttonId) {
+  st = '<tr><td>' + item.name + '</td><td>' + item.date +
+       '</td><td><span class="label label-danger">' +
+       item.status + '</span></td><td><button ';
+  st += buttonId? 'id="' + item.id + '"' : '';
+  st += 'class="btn btn-custom complete-todo">Complete</button></td>';
+  return st;
+}
+
+function renderToDos () {
+  console.log(localStorage.toDos);
+  console.log(localStorage.completeToDos);
+  var data = JSON.parse(localStorage.toDos);
+  if (data.length > 0) {
+    data.forEach(function (element) {
+      $("#todo-list").append(buildToDoHtml(element, true));
+    });
+  }
+  var data = JSON.parse(localStorage.completeToDos);
+  data.forEach(function (element) {
+    $("#todo-completed").append(buildToDoHtml(element, false));
+  });
+}
+
+renderToDos();
+
+function markCompleted () {
+  $(this).closest('tr').remove();
+
+  var id = $(this).attr('id');
+  console.log(id);
+  var data = JSON.parse(localStorage.toDos);
+  markedToDo = data.filter(function (item) {
+    return item.id == id;
+  });
+  console.log(markedToDo);
+  addToCompleted(markedToDo[0]);
+}
+
+function addToCompleted (todo) {
+  removeToDoFromStorage(todo);
+  var data = JSON.parse(localStorage.completeTodos);
+  data.push(todo);
+  localStorage.completeToDos = JSON.stringify(data);
+  console.log(localStorage.completeToDos);
+  $("#todo-completed").append(buildToDoHtml(todo, false));
+}
+
+$("#newToDoForm").submit(function (e) {
+  e.preventDefault();
+  var newToDo = {id: Math.floor(Math.random()*100),
+                 name: $('#add-task-name').val(),
+                 date: $('#add-task-date').val(),
+                 status: 'Complete'};
+  addToDoToStorage(newToDo);
+  console.log(newToDo);
+  console.log(localStorage.toDos);
+  $("#todo-list").append(buildToDoHtml(newToDo, true));
+  $('.complete-todo').on('click', markCompleted);
+})
+
+$('.complete-todo').on('click', markCompleted);
+
+$('#clrLS').on('click', clearStorage)
+
+// var todos = [
+//   {id: Math.floor(Math.random() * 100), title: 'Title 1', date: '01.11.17'},
+//   {id: Math.floor(Math.random() * 100), title: 'Title 2', date: '02.11.17'},
+//   {id: Math.floor(Math.random() * 100), title: 'Title 3', date: '03.11.17'},
+//   {id: Math.floor(Math.random() * 100), title: 'Title 4', date: '04.11.17'},
+//   {id: Math.floor(Math.random() * 100), title: 'Title 5', date: '05.11.17'}
+// ];
+
+function renderToDosToPage(arr) {
+  for (var i = 0; i < arr.length; i++) {
+    $('#todo-list').append('<tr><td>'
+                            + arr[i].title
+                            + '</td><td>'
+                            + arr[i].date
+                            + '</td><td>'
+                            + '<button id="' + arr[i].id + '" class="btn btn-custom completeToDoBtn">Complete</button>'
+                            + '</td></tr>')
+  }
+}
+
+renderToDosToPage([])
 
 function undoComplete() {
   console.log('test');

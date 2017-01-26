@@ -1,0 +1,54 @@
+html, body {
+  margin: 0;
+  color: #FA6900;
+  font-size: 20px;
+  background: #F38630;
+  background: -webkit-linear-gradient(#F38630, ghostwhite);
+  background: -o-linear-gradient(#F38630, ghostwhite);
+  background: -moz-linear-gradient(#F38630, ghostwhite);
+  background: linear-gradient(#F38630, ghostwhite);
+}
+h1 {
+  text-decoration: underline;
+}
+.container {
+  zbackground: #E0E4CC;
+  background: ghostwhite;
+  padding-bottom: 120px;
+}
+.jumbotron {
+  background: #A7DBD8;
+  color: ghostwhite;
+  border-radius: 0px !important;
+}
+.btn-custom {
+  color: ghostwhite;
+  background-color: #FA6900;
+  border-color: #A7DBD8;
+}
+.btn-custom:hover {
+  color: #A7DBD8;
+}
+.btn-custom-reverse {
+  color: #FA6900;
+  background-color: #A7DBD8;
+  border-color: #FA6900;
+}
+.btn-custom-reverse:hover {
+  color: ghostwhite;
+}
+.schedule-box {
+  background: #A7DBD8;
+  padding: 25px;
+  border: 1px solid #FA6900;
+}
+.schedule-box label {
+  color: ghostwhite;
+  text-shadow: 1px 1px #FA6900, -1px -1px #FA6900, 1px -1px #FA6900, -1px 1px #FA6900;
+}
+.spacer15 {
+  height: 15px;
+}
+.spacer30 {
+  height: 30px;
+}
